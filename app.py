@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 from vulnerabilities.sql_injection import scan  # Import the scan function from sql_injection module
 from vulnerabilities.xss import scan as scan_xss
 from vulnerabilities.enum import enumerate_target
+from vulnerabilities.misconfig import scan_misconfig
+
 
 app = Flask(__name__)
 
@@ -22,6 +24,8 @@ def index():
             result = scan_xss(target)
         elif module == "enum":
             result = enumerate_target(target)
+        elif module == "misconfig":
+            result = scan_misconfig(target)
 
         else:
             result = f"Simulated scan on target: {target} using module: {module}"

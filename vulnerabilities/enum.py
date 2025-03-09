@@ -2,6 +2,7 @@ import os
 import requests
 import socket
 import subprocess
+import time
 
 def get_ip(target):
     try:
@@ -44,6 +45,10 @@ def run_nmap(target):
     except FileNotFoundError:
         return "Nmap is not installed or not found in system PATH."
 
+     
+
+
+
 def enumerate_target(target):
     # Resolve IP
     ip = get_ip(target)
@@ -54,6 +59,7 @@ def enumerate_target(target):
     open_ports = port_scan(ip)
     subdomains = subdomain_enum(target)
     nmap_results = run_nmap(target)
+    # directory_results = directory_enum(target)
 
     # Build a multi-line result string with line breaks
     result_text = (
@@ -62,6 +68,7 @@ def enumerate_target(target):
         f"Open Ports: {open_ports}\n"
         f"Subdomains Found: {subdomains}\n\n"
         f"Nmap Scan Results:\n{nmap_results}"
+    
     )
 
     return result_text
