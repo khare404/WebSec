@@ -94,14 +94,15 @@ def check_form_creds(target):
     for (u, p) in common_creds:
         data = {
             "uid": u,
-            "passwrd": p  # <-- Correct field name
+            "passw": p  # <-- Correct field name
         }
         try:
             # Follow redirects, as a successful login might lead to a different page
-            r = requests.post(login_url, data=data, timeout=5, allow_redirects=True)
+            r = requests.post(target, data=data, timeout=5, allow_redirects=True)
             # On Altoro, a successful login typically shows "Sign Off" in the response
             if "Sign Off" in r.text or "Logout" in r.text:
-                found.append((u, p))
+                # found.append((u, p))
+                print("Common Bypass Found",u,p)
         except requests.RequestException:
             pass
 
