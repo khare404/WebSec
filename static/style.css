@@ -1,15 +1,16 @@
 /* General Reset & Body */
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f7fa;
   margin: 0;
   padding: 0;
+  color: #333;
 }
 
 /* Navigation */
 nav {
-  background: #333;
-  padding: 10px;
+  background: #2c3e50;
+  padding: 14px 30px;
   color: white;
   display: flex;
   justify-content: space-between;
@@ -17,7 +18,7 @@ nav {
 }
 
 .logo {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
 }
 
@@ -25,16 +26,18 @@ nav ul {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-nav ul li {
-  display: inline;
-  margin-right: 15px;
+  display: flex;
+  gap: 20px;
 }
 
 nav ul li a {
   color: white;
   text-decoration: none;
+  font-weight: 500;
+}
+
+nav ul li a.active {
+  border-bottom: 2px solid #1abc9c;
 }
 
 /* Main Container */
@@ -42,15 +45,16 @@ nav ul li a {
   width: 95%;
   max-width: 1400px;
   margin: 20px auto;
-  padding: 20px;
+  padding: 30px;
   background: white;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
   border-radius: 8px;
 }
 
 /* Headings */
 h1 {
   text-align: center;
+  color: #2c3e50;
 }
 
 /* Form Styles */
@@ -91,8 +95,8 @@ button:hover {
 
 /* Spinner Animation */
 .spinner {
-  border: 8px solid #f3f3f3;  /* Light grey */
-  border-top: 8px solid #007BFF; /* Blue */
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #007BFF;
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -111,7 +115,7 @@ button:hover {
   margin-top: 20px;
   border-radius: 5px;
   padding: 20px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
 }
 
 /* Scrollable Output Container */
@@ -120,7 +124,7 @@ button:hover {
   max-height: 65vh;
   overflow-y: auto;
   background: #1f1825;
-  color: #0f0;  /* Green text for terminal-like effect */
+  color: #0f0;
   font-family: monospace;
   padding: 20px;
   border-radius: 5px;
@@ -132,9 +136,7 @@ button:hover {
   word-break: break-all;
 }
 
-
-/* === Added styles for previous scans table === */
-
+/* Table Styles */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -174,11 +176,41 @@ pre {
   line-height: 1.3;
 }
 
-/* Optional highlight classes (if you use them in the future) */
 .green {
   color: #00ff00;
 }
 
 .red {
   color: #ff4c4c;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.01);
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.secondary-btn {
+  background-color: #17a2b8;
+}
+
+.secondary-btn:hover {
+  background-color: #17a2b8;
+}
+
+form label {
+  font-weight: bold;
+  margin-top: 10px;
 }

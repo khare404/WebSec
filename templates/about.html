@@ -1,24 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - WebSec Scanner</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About - WebSec Scanner</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
 </head>
 <body>
-    <nav>
-        <div class="logo">WebSec Scanner</div>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
-        </ul>
-    </nav>
+  <nav>
+    <div class="logo">WebSec Scanner</div>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about" class="active">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+  </nav>
 
-    <div class="container">
-        <h1>About WebSec Scanner</h1>
-        <p>WebSec is a powerful tool designed to detect vulnerabilities in websites, including SQL Injection, XSS, CSRF, and more.</p>
-    </div>
+  <div class="main-wrapper">
+    <aside class="sidebar">
+      <h3>Vulnerability Info</h3>
+      <ul>
+        <li><a href="https://portswigger.net/web-security/sql-injection" target="_blank">SQL Injection</a></li>
+        <li><a href="https://portswigger.net/web-security/xss" target="_blank">Cross-Site Scripting (XSS)</a></li>
+        <li><a href="https://portswigger.net/web-security/security-misconfiguration" target="_blank">Security Misconfig</a></li>
+        <li><a href="https://portswigger.net/web-security/directory-traversal" target="_blank">Directory Traversal</a></li>
+        <li><a href="https://portswigger.net/web-security/information-disclosure" target="_blank">Enumeration</a></li>
+      </ul>
+    </aside>
+
+    <section class="about-content">
+      <h1>About WebSec Scanner</h1>
+      <p><strong>WebSec Scanner</strong> is a lightweight tool designed for detecting common vulnerabilities in web applications. It aims to assist ethical hackers, students, and developers in understanding real-world security flaws and resolving them effectively.</p>
+
+      <h2>Project Objectives:</h2>
+      <ul>
+        <li>Identify vulnerabilities in a web application with ease.</li>
+        <li>Support multiple modules with modular design.</li>
+        <li>Generate visually distinct output for easier analysis.</li>
+        <li>Encourage learning of secure coding and testing practices.</li>
+      </ul>
+
+      <h2>Vulnerability Types:</h2>
+      <ul>
+        <li><strong>SQL Injection:</strong> Exploiting database queries through unsanitized input fields.</li>
+        <li><strong>XSS:</strong> Injecting scripts that execute in users' browsers to steal data or hijack sessions.</li>
+        <li><strong>Security Misconfig:</strong> Weak or default configurations that can expose critical data.</li>
+        <li><strong>Directory Traversal:</strong> Accessing files outside the web directory using path traversal.</li>
+        <li><strong>Enumeration:</strong> Discovering sensitive system data such as user accounts or services.</li>
+      </ul>
+
+      <p class="note">Note: This scanner is for ethical and educational use only. Do not scan targets without permission.</p>
+    </section>
+  </div>
 </body>
 </html>

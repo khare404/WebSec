@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>WebSec Scanner</title>
-  <!-- Link your CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -14,64 +13,59 @@
       <li><a href="/">Home</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="/contact">Contact</a></li>
-      
     </ul>
   </nav>
 
   <div class="container">
-    <h1>WebSec Vulnerability Scanner</h1>
+    <div class="card">
+      <h1>WebSec Vulnerability Scanner</h1>
 
-    <!-- SCAN FORM -->
-    <form method="post" id="scan-form">
-      <label for="target">Target URL:</label>
-      <input type="text" id="target" name="target" placeholder="https://example.com" required>
+      <form method="post" id="scan-form">
+        <label for="target">Target URL:</label>
+        <input type="text" id="target" name="target" placeholder="https://example.com" required>
 
-      <label for="module">Select Module:</label>
-      <select id="module" name="module">
-        <option value="all">All</option>
-        <option value="sql">SQL Injection</option>
-        <option value="xss">XSS</option>
-        <!-- <option value="csrf">CSRF</option> -->
-        <option value="misconfig">Security Misconfigurations</option>
-        <!-- <option value="ddos">DDoS (Use with caution)</option> -->
-        <option value="Directory Traversal">Directory Traversal</option>
-        <option value="enum">Enumeration</option>
-      </select>
+        <label for="module">Select Module:</label>
+        <select id="module" name="module">
+          <option value="all">All</option>
+          <option value="sql">SQL Injection</option>
+          <option value="xss">XSS</option>
+          <option value="misconfig">Security Misconfigurations</option>
+          <option value="Directory Traversal">Directory Traversal</option>
+          <option value="enum">Enumeration</option>
+        </select>
 
-      <button type="submit">Start Scan</button>
-    </form>
-    <a href="/previous_scans">
-      <button type="button">Previous Scans</button>
-    </a>
-    <!-- LOADING SPINNER (initially hidden) -->
-    <div id="spinner" class="spinner-container" style="display: none;">
-      <div class="spinner"></div>
-      <p>Scanning in progress...</p>
-    </div>
+        <div class="button-group">
+          <button type="submit">Start Scan</button>
+          <a href="/previous_scans"><button type="button" class="secondary-btn">Previous Scans</button></a>
+        </div>
+      </form>
 
-    <!-- SCAN RESULTS -->
-    {% if result %}
+      <div id="spinner" class="spinner-container" style="display: none;">
+        <div class="spinner"></div>
+        <p>Scanning in progress...</p>
+      </div>
+
+      {% if result %}
       <div class="result">
         <h2>Scan Results</h2>
         <p><strong>Target:</strong> {{ target }}</p>
         <p><strong>Module:</strong> {{ module }}</p>
         <div class="results-container">
-          <pre style="margin: 0; padding: 0;">
-            {% for line in result.split('\n') -%}
-              {% if '[!]' in line or 'Successful' in line %}
-            <span style="color:red;">{{ line }}</span>
-              {% else %}
-            <span style="color:limegreen;">{{ line }}</span>
-              {% endif %}
-            {% endfor %}
-            </pre>
-            
+          <pre>
+{% for line in result.split('\n') -%}
+  {% if '[!]' in line or 'Successful' in line %}
+<span class="red">{{ line }}</span>
+  {% else %}
+<span class="green">{{ line }}</span>
+  {% endif %}
+{% endfor %}
+          </pre>
         </div>
       </div>
-    {% endif %}
+      {% endif %}
+    </div>
   </div>
 
-  <!-- Show spinner on form submit -->
   <script>
     document.getElementById("scan-form").addEventListener("submit", function() {
       document.getElementById("spinner").style.display = "block";
