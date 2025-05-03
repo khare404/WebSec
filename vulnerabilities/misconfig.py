@@ -1,61 +1,47 @@
 import requests
 
 def scan_misconfig(target):
-    """
-    Scans the target for common security misconfigurations:
-      1. Checks if HTTPS is used.
-      2. Attempts to detect directory listing on common paths.
-      3. Looks for exposed files (.git, .env, etc.).
-      4. Checks server headers (Server, X-Powered-By).
-      5. Tries form-based default credentials on /login.jsp (Altoro style: uid & passwrd).
-
-    Returns:
-        A multiline string describing any findings.
-    """
     result_text = f"Security Misconfigurations Scan for: {target}\n\n"
 
-    # 1) Check if HTTPS is used
+    # 1) Insecure scheme
     if target.startswith("http://"):
         result_text += "[!] Insecure scheme: using HTTP instead of HTTPS.\n\n"
 
-    # 2) Check for directory listing or exposed files
+    # 2) Directory listings & exposed files
     endpoints = ["", "admin", ".git/", ".env", ".htaccess"]
-    for endpoint in endpoints:
-        url = target.rstrip("/") + "/" + endpoint
+    for ep in endpoints:
+        url = target.rstrip("/") + "/" + ep
         try:
-            resp = requests.get(url, timeout=5)
-            if "Index of" in resp.text or "<title>Index of" in resp.text:
-                result_text += f"[!] Possible directory listing found at: {url}\n"
-            elif endpoint and resp.status_code == 200:
-                # If .env, .git, or .htaccess is accessible, it's a big misconfig
-                result_text += f"[!] {endpoint} might be exposed: {url}\n"
+            r = requests.get(url, timeout=5)
+            if "Index of" in r.text or "<title>Index of" in r.text:
+                result_text += f"[!] Possible directory listing at: {url}\n"
+            elif ep and r.status_code == 200:
+                result_text += f"[!] Exposed: {ep} at {url}\n"
         except requests.RequestException:
             pass
 
-    # 3) Check server headers
+    # 3) Server headers
     try:
-        resp_head = requests.head(target, timeout=5)
-        server_header = resp_head.headers.get("Server", "")
-        powered_by = resp_head.headers.get("X-Powered-By", "")
-        
-        if server_header:
-            result_text += f"\n[Server Header] {server_header}\n"
-        if powered_by:
-            result_text += f"[X-Powered-By] {powered_by}\n"
+        r = requests.head(target, timeout=5)
+        srv = r.headers.get("Server")
+        xp  = r.headers.get("X-Powered-By")
+        if srv:
+            result_text += f"\n[Server Header] {srv}\n"
+        if xp:
+            result_text += f"[X-Powered-By] {xp}\n"
     except requests.RequestException:
         pass
 
-    # 4) Check form-based default creds (Altoro style: uid & passwrd)
-    creds_found = check_form_creds(target)
-    if creds_found:
+    # 4) Default credentials on login form
+    creds = check_form_creds(target)
+    if creds:
         result_text += "\n[!] Potential default form credentials found:\n"
-        for (u, p) in creds_found:
+        for u, p in creds:
             result_text += f"    - {u}:{p}\n"
 
-    # If nothing was flagged
-    if all(x not in result_text for x in [
-        "Insecure scheme", "directory listing", ".env", ".git", 
-        ".htaccess", "default form credentials"
+    # nothing found?
+    if all(tag not in result_text for tag in [
+        "Insecure scheme", "directory listing", "Exposed", "default form credentials"
     ]):
         result_text += "\nNo obvious misconfigurations found (basic checks only)."
 
@@ -64,46 +50,37 @@ def scan_misconfig(target):
 
 def check_form_creds(target):
     """
-    Checks form-based logins with common credentials on the Altoro-like login:
-    - /login.jsp with fields uid & passwrd
-    - Looks for 'Sign Off' in the response to confirm a successful login.
-
-    Common credentials tried:
-      - admin:admin
-      - admin:password
-      - user:password
-      - root:root
-
-    Returns:
-        A list of (username, password) pairs that actually log in successfully.
+    Attempts default creds on Altoro Testfire’s login form.
+    Uses a session, correct field names, and the submit button.
     """
+    # Determine actual login URL
+    login_url = target if target.lower().endswith("login.jsp") else target.rstrip("/") + "/login.jsp"
+
+    session = requests.Session()
+    try:
+        session.get(login_url, timeout=5)  # prime cookies
+    except requests.RequestException:
+        return []
+
     common_creds = [
         ("admin", "admin"),
         ("admin", "password"),
-        ("user", "password"),
-        ("root", "root"),
+        ("user",  "password"),
+        ("root",  "root"),
     ]
     found = []
 
-    # If the user gave a direct URL with /login.jsp, use that; otherwise, append /login.jsp
-    if "login.jsp" in target:
-        login_url = target
-    else:
-        login_url = target.rstrip("/") + "/login.jsp"
-
-    for (u, p) in common_creds:
+    for u, p in common_creds:
         data = {
-            "uid": u,
-            "passw": p  # <-- Correct field name
+            "uid":       u,
+            "passwrd":   p,         # correct Altoro field name
+            "btnSubmit": "Login"    # Altoro’s submit button name/value
         }
         try:
-            # Follow redirects, as a successful login might lead to a different page
-            r = requests.post(target, data=data, timeout=5, allow_redirects=True)
-            # On Altoro, a successful login typically shows "Sign Off" in the response
+            r = session.post(login_url, data=data, timeout=5, allow_redirects=True)
             if "Sign Off" in r.text or "Logout" in r.text:
-                # found.append((u, p))
-                print("Common Bypass Found",u,p)
+                found.append((u, p))
         except requests.RequestException:
-            pass
+            continue
 
     return found

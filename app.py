@@ -4,6 +4,8 @@ from vulnerabilities.xss import scan as scan_xss
 from vulnerabilities.enum import enumerate_target
 from vulnerabilities.misconfig import scan_misconfig
 from dataBase import init_db, save_scan,get_previous_scans
+from vulnerabilities.directory_traversal import scan_directory_traversal
+
 
 app = Flask(__name__)
 
@@ -21,7 +23,9 @@ def index():
         module = request.form.get("module")
 
         # Check which module to run
-        if module == "sql":
+        if module == "all" :
+            result = scan(target) + scan_xss(target) + enumerate_target(target) + scan_misconfig(target) + scan_directory_traversal(target)
+        elif module == "sql":
             result = scan(target)  # Use the imported scan function
         elif module == "xss":
             result = scan_xss(target)
@@ -29,6 +33,9 @@ def index():
             result = enumerate_target(target)
         elif module == "misconfig":
             result = scan_misconfig(target)
+        elif module == "Directory Traversal":
+            result = scan_directory_traversal(target)
+
         else:
             result = f"Simulated scan on target: {target} using module: {module}"
 

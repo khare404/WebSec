@@ -34,6 +34,7 @@
         <!-- <option value="csrf">CSRF</option> -->
         <option value="misconfig">Security Misconfigurations</option>
         <!-- <option value="ddos">DDoS (Use with caution)</option> -->
+        <option value="Directory Traversal">Directory Traversal</option>
         <option value="enum">Enumeration</option>
       </select>
 
@@ -55,7 +56,16 @@
         <p><strong>Target:</strong> {{ target }}</p>
         <p><strong>Module:</strong> {{ module }}</p>
         <div class="results-container">
-          <pre>{{ result }}</pre>
+          <pre style="margin: 0; padding: 0;">
+            {% for line in result.split('\n') -%}
+              {% if '[!]' in line or 'Successful' in line %}
+            <span style="color:red;">{{ line }}</span>
+              {% else %}
+            <span style="color:limegreen;">{{ line }}</span>
+              {% endif %}
+            {% endfor %}
+            </pre>
+            
         </div>
       </div>
     {% endif %}
